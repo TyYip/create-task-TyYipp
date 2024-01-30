@@ -1,4 +1,4 @@
-import random
+""" import random
 
 def game():
     counter = 0
@@ -41,3 +41,4 @@ def game():
             continue
 game()
         
+ """
