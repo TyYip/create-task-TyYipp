@@ -1,57 +1,58 @@
-function game() {
-    let counter = 0;
-    const history = [];
+const arr = [];
 
-    while (true) {
-        const player = prompt("Choose rock, paper, or scissors (history or exit): ");
+function upresults(message) {
+    document.getElementById("results").innerHTML = `<p>${message}</p>`;
+}
 
-        if (player.toLowerCase() === "exit") {
-            console.log("Goodbye");
-            break;
-        } else if (player.toLowerCase() === "history") {
-            console.log(history);
-            continue;
-        }
+function uphistory() {
+    const history = document.getElementById("history");
+    history.innerHTML = "";
 
-        counter++;
-        console.log('Game number: ' + counter);
-        const options = ["rock", "paper", "scissors"];
-        const random = Math.floor(Math.random() * options.length);
-        const computer = options[random];
-        console.log(computer);
-
-        function stat() {
-            console.log("Computer had: " + computer);
-            console.log("You had: " + player.toLowerCase());
-        }
-
-        if (player.toLowerCase() === computer) {
-            console.log("Results: draw");
-            const result = 'Game number ' + counter + '=  draw';
-            history.push(result);
-            stat();
-        } else if (
-            (player.toLowerCase() === "scissors" && computer === "rock") ||
-            (player.toLowerCase() === "paper" && computer === "scissors") ||
-            (player.toLowerCase() === "rock" && computer === "paper")
-        ) {
-            console.log("Results: lost");
-            const result = 'Game number ' + counter + ' = lost';
-            history.push(result);
-            stat();
-        } else if (
-            (player.toLowerCase() === "paper" && computer === "rock") ||
-            (player.toLowerCase() === "rock" && computer === "scissors") ||
-            (player.toLowerCase() === "scissors" && computer === "paper")
-        ) {
-            console.log("Results: won");
-            const result = 'Game number ' + counter + ' = win';
-            history.push(result);
-            stat();
-        } else {
-            console.log("Try again");
-            continue;
-        }
+    for (let i = 0; i < arr.length; i++) {
+        history.insertAdjacentHTML('beforeend', `<div>Trial ${i + 1}: ${arr[i]}</div>`);
     }
 }
-game()
+
+
+function play(playerChoice) {
+    if (playerChoice === "exit") {
+        upresults("Goodbye");
+        arr.length = 0; 
+        uphistory(); 
+        return;
+    }
+
+    if (playerChoice === "historybtn") {
+        uphistory();
+        return;
+    }
+
+    const options = ["rock", "paper", "scissors"];
+    const computerChoice = options[Math.floor(Math.random() * options.length)];
+
+    const result = compare(playerChoice, computerChoice);
+    upresults(result);
+
+    arr.push(`YOU: ${playerChoice} vs COMPUTER: ${computerChoice} - ${result}`);
+}
+
+function compare(player, computer) {
+    if (player === computer) {
+        return "It's a draw! 🏳";
+    } else if (
+        (player === "scissors" && computer === "rock") ||
+        (player === "paper" && computer === "scissors") ||
+        (player === "rock" && computer === "paper")
+    ) {
+        return "You lost! ✖";
+    } else {
+        return "You won! ✔";
+    }
+}
+
+const buttons = document.querySelectorAll(".btn");
+buttons.forEach(button => {
+    button.addEventListener("click", function () {
+        play(button.id);
+    });
+});
